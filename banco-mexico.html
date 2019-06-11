@@ -1,0 +1,123 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+
+<dom-module id="banco-mexico">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>[[prop1]]</h2>
+    <button on-tap="_cuentaBanco">CUENTA BANCO MÉXICO</button>
+    <iron-collapse id="collapse">
+      <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
+      <button on-tap="_ingresarDinero">Ingresar Dinero</button>
+      <button on-tap="_retirarDinero">Retirar Dinero</button>
+      <p>Actualmente tienes</p>
+      <p>Monto: $[[amountTotal]] [[currency]]</p>
+    </iron-collapse>
+    <slot></slot>
+  </template>
+
+  <script>
+    /**
+     * `banco-mexico`
+     * Componente de Bancos, depositar, retirar dinero
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class BancoMexico extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'banco-mexico'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'Banco México'
+          },
+          currency: {
+            type: String,
+            value: 'MXN',
+            readOnly: true,
+            notify: true
+          },
+          amount: {
+            type: Number,
+            value: 0,
+          },
+          amountTotal: {
+            type: Number,
+            value: 0,
+            notify: true
+          },
+          maxAmount: {
+            type: Number,
+            value: 2000
+          },
+          ingresa: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      _cuentaBanco(){
+        if(this.ingresa){
+          this.ingresa = false;
+          this.$.collapse.hide();
+        } else {
+          this.ingresa = true;
+          this.$.collapse.show();
+        }
+      }
+
+      _ingresarDinero(){
+        this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount); 
+        if((this.amount && this.amountTotal) <= this.maxAmount){
+          this.dispatchEvent(new CustomEvent('elemento-success', {
+            detail : {
+              isOnDOM: true,
+              message: 'Depósito Exitoso. Se ha ingresado con éxito $' + this.$.cantidad.value + ' a la cuenta Banco México',
+            }
+          }));
+        }else{
+          this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
+          this.dispatchEvent(new CustomEvent('elemento-error', {
+            detail : {
+              isOnDOM: true,
+              message: 'Error de Depósito. Monto excedido de Banco México',
+            }
+          }));
+          alert('ERROR DE DEPÓSITO. Monto excedido del límite de cuenta de Banco México');
+        }
+      }
+
+      _retirarDinero(){
+        this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
+        if(this.amountTotal >= 0){
+          this.dispatchEvent(new CustomEvent('elemento-success', {
+            detail : {
+              isOnDOM: true,
+              message: 'Retiro Exitoso. Se ha retirado $' + this.$.cantidad.value + ' en la cuenta Banco México',
+            }
+          }));
+          this.amountTotal;
+        }else if(this.amountTotal < 0){
+          this.dispatchEvent(new CustomEvent('elemento-error', {
+            detail : {
+              isOnDOM: true,
+              message: 'Error de Retiro. No cuentas con saldo suficiente, tu saldo es de $' + (parseInt(this.amountTotal) + parseInt(this.amount)) + ' en la cuenta Banco México',
+            }
+          }));
+          this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
+          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de $' + this.amountTotal + this.currency);
+        }
+      }
+    }
+    window.customElements.define(BancoMexico.is, BancoMexico);
+  </script>
+</dom-module>

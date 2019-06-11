@@ -1,0 +1,78 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="./banco-mexico.html">
+<link rel="import" href="./banco-chino.html">
+<link rel="import" href="./banco-corea.html">
+<link rel="import" href="./banco-japones.html">
+
+
+<dom-module id="banco-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>¡Bienvenid@ al Banco!</h2>
+    <banco-mexico id="bancoMexico" amountTotal={{amountBanco}} currency={{currencyBanco}} on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-mexico>
+    <banco-chino id="bancoChino" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-chino>
+    <banco-corea id="bancoCorea" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-corea>
+    <banco-japones id="bancoJapones" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-japones>
+    <h2>Transacciones</h2>
+    <H3>Exitosas</H3>
+    <template is="dom-repeat" items="[[transacciones]]">  
+      <p>[[item]]</p>
+    </template>
+    <h3>Erróneas</h3>
+    <template is="dom-repeat" items="[[errores]]">
+      <p>[[item]]</p>
+    </template>
+  </template>
+
+  <script>
+    /**
+     * `banco-app`
+     * Componente de Bancos, depositar, retirar dinero
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class BancoApp extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'banco-app'; }
+      static get properties() {
+        return {
+          transacciones: {
+            type: Array,
+            value: () => {
+              return []
+            }
+          },
+          errores: {
+            type: Array,
+            value: () => { 
+              return []
+            }
+          },
+          amountBanco: Number,
+          currencyBanco: String,
+        };
+      }
+
+      connectedCallback(){
+        super.connectedCallback();
+      }
+
+      _eventoSuccess(e) {
+        this.push('transacciones', e.detail.message);
+        console.log(this.transacciones);
+      }
+
+      _eventoError(e) {
+        this.push('errores', e.detail.message);
+      }
+    }
+
+    window.customElements.define(BancoApp.is, BancoApp);
+  </script>
+</dom-module>
