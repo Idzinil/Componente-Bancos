@@ -9,9 +9,11 @@
       :host {
         display: block;
       }
+      .btn {
+        font-size: 13.9px;
+      }
     </style>
-    <h2>[[prop1]]</h2>
-    <button on-tap="_cuentaBanco">CUENTA BANCO MÉXICO</button>
+    <button class="btn" on-tap="_cuentaBanco">CUENTA BANCO MÉXICO</button>
     <iron-collapse id="collapse">
       <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
       <button on-tap="_ingresarDinero">Ingresar Dinero</button>
@@ -35,10 +37,6 @@
       static get is() { return 'banco-mexico'; }
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'Banco México'
-          },
           currency: {
             type: String,
             value: 'MXN',
@@ -76,23 +74,27 @@
       }
 
       _ingresarDinero(){
-        this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount); 
-        if((this.amount && this.amountTotal) <= this.maxAmount){
-          this.dispatchEvent(new CustomEvent('elemento-success', {
-            detail : {
-              isOnDOM: true,
-              message: 'Depósito Exitoso. Se ha ingresado con éxito $' + this.$.cantidad.value + ' a la cuenta Banco México',
-            }
-          }));
+        if (!/^([0-9])*$/.test(this.amount)){
+          alert("Lo ingresado no es una cantidad válida");
         }else{
-          this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
-          this.dispatchEvent(new CustomEvent('elemento-error', {
-            detail : {
-              isOnDOM: true,
-              message: 'Error de Depósito. Monto excedido de Banco México',
-            }
-          }));
-          alert('ERROR DE DEPÓSITO. Monto excedido del límite de cuenta de Banco México');
+          this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount); 
+          if((this.amount && this.amountTotal) <= this.maxAmount){
+            this.dispatchEvent(new CustomEvent('elemento-success', {
+              detail : {
+                isOnDOM: true,
+                message: 'Depósito Exitoso. Se ha ingresado con éxito $' + this.$.cantidad.value + ' a la cuenta Banco México',
+              }
+            }));
+          }else{
+            this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
+            this.dispatchEvent(new CustomEvent('elemento-error', {
+              detail : {
+                isOnDOM: true,
+                message: 'Error de Depósito. Monto excedido de Banco México',
+              }
+            }));
+            alert('ERROR DE DEPÓSITO. Monto excedido del límite de cuenta de Banco México');
+          }
         }
       }
 
@@ -114,7 +116,7 @@
             }
           }));
           this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
-          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de $' + this.amountTotal + this.currency);
+          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de $' + this.amountTotal + ' ' + this.currency);
         }
       }
     }

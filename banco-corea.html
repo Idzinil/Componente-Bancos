@@ -9,9 +9,11 @@
       :host {
         display: block;
       }
+      .btn {
+        font-size: 13.9px;
+      }
     </style>
-    <h2>[[prop1]]</h2>
-    <button  on-tap="_cuentaBanco">CUENTA BANCO COREA</button>
+    <button class="btn" on-tap="_cuentaBanco">CUENTA BANCO COREA</button>
     <iron-collapse id="collapse">
       <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
       <button on-tap="_ingresarDinero">Ingresar Dinero</button>
@@ -34,10 +36,6 @@
       static get is() { return 'banco-corea'; }
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'Banco Corea'
-          },
           currency: {
             type: String,
             value: 'KRW',
@@ -113,7 +111,7 @@
             }
           }));
           this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
-          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 원' + this.amountTotal + this.currency);
+          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 원' + this.amountTotal + ' ' + this.currency);
         }
       }
     }

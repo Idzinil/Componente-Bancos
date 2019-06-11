@@ -12,21 +12,68 @@
       :host {
         display: block;
       }
+      paper-card.compon {
+      --paper-card-header-color: black;
+      --paper-card-font: black;
+      --paper-card-margin-bottom:8px; 
+      --paper-margin-right:8px; 
+      --paper-margin-left:8px
+      }
+      paper-card.compon {
+        width: 220px;
+        height: auto;
+      }
+
+      paper-card.componTrans {
+        width: 450px;
+        height: auto;
+      }
+
+      #opacidad {
+        image-rendering: crisp-edges;
+        /*opacity: 0.5;*/
+      }
     </style>
     <h2>¡Bienvenid@ al Banco!</h2>
-    <banco-mexico id="bancoMexico" amountTotal={{amountBanco}} currency={{currencyBanco}} on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-mexico>
-    <banco-chino id="bancoChino" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-chino>
-    <banco-corea id="bancoCorea" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-corea>
-    <banco-japones id="bancoJapones" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-japones>
-    <h2>Transacciones</h2>
-    <H3>Exitosas</H3>
-    <template is="dom-repeat" items="[[transacciones]]">  
-      <p>[[item]]</p>
-    </template>
-    <h3>Erróneas</h3>
-    <template is="dom-repeat" items="[[errores]]">
-      <p>[[item]]</p>
-    </template>
+
+    <div class="horizontal">
+      <paper-card id="opacidad" image="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Mexico_%281934-1968%29.svg/700px-Flag_of_Mexico_%281934-1968%29.svg.png" alt="BMéxico" class="compon">
+        <div class="card-content">
+          <banco-mexico id="bancoMexico" amountTotal={{amountBanco}} currency={{currencyBanco}} on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-mexico>
+        </div>
+      </paper-card>
+      <br><br>
+      <paper-card image="https://sobrechina.com/files/Bandera-china.jpg" alt="BChina" class="compon">
+        <div class="card-content">
+          <banco-chino id="bancoChino" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-chino>
+        </div>
+      </paper-card>
+      <br><br>
+      <paper-card image="https://www.lifeder.com/wp-content/uploads/2018/10/640px-Flag_of_the_Provisional_Government_of_the_Republic_of_Korea.svg_.png" alt="BCorea" class="compon">
+        <div class="card-content"> 
+          <banco-corea id="bancoCorea" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-corea>
+        </div>
+      </paper-card>
+      <br><br>
+      <paper-card image="https://durabol.com/wp-content/uploads/2017/06/DB-5062-3.jpg" alt="BJapón" class="compon">
+        <div class="card-content">
+          <banco-japones id="bancoJapones" amountTotal={{amountBanco}} currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-japones>
+        </div>
+      </paper-card>
+      <br><br>
+    </div>
+    <paper-card heading = "Transacciones" alt="Transacción" class="componTrans">
+      <div class = "card-content horizontal justified">
+        <H3>Exitosas</H3>
+        <template is="dom-repeat" items="[[transacciones]]">  
+          <p>[[item]]</p>
+        </template>
+        <h3>Erróneas</h3>
+        <template is="dom-repeat" items="[[errores]]">
+          <p>[[item]]</p>
+        </template>
+      </div>
+    </paper-card>
   </template>
 
   <script>

@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-card/paper-card.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
 
@@ -9,9 +10,11 @@
       :host {
         display: block;
       }
+      .btn {
+        font-size: 13.7px;
+      }
     </style>
-    <h2>[[prop1]]</h2>
-    <button  on-tap="_cuentaBanco">CUENTA BANCO JAPONES</button>
+    <button class="btn" on-tap="_cuentaBanco">CUENTA BANCO JAPONES</button>
     <iron-collapse id="collapse">
       <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
       <button on-tap="_ingresarDinero">Ingresar Dinero</button>
@@ -34,10 +37,6 @@
       static get is() { return 'banco-japones'; }
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'Banco Japón'
-          },
           currency: {
             type: String,
             value: 'JPY',
@@ -113,7 +112,7 @@
             }
           }));
           this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
-          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 円' + this.amountTotal + this.currency);
+          alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 円' + this.amountTotal + ' ' + this.currency);
         }
       }
     }
