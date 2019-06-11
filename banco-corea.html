@@ -17,7 +17,7 @@
       <button on-tap="_ingresarDinero">Ingresar Dinero</button>
       <button on-tap="_retirarDinero">Retirar Dinero</button>
       <p>Actualmente tienes</p>
-      <p>Monto: 원 [[amountTotal]] [[currency]]</p>
+      <p>Monto: 원[[amountTotal]] [[currency]]</p>
     </iron-collapse>
   </template>
 
@@ -65,7 +65,6 @@
       }
 
       _cuentaBanco(){
-        console.log("Dinero Actual: 원", this.amount, " KRW");
         if(this.ingresa){
           this.ingresa = false;
           this.$.collapse.hide();
@@ -84,7 +83,7 @@
               message: 'Depósito Exitoso. Se ha ingresado con éxito ¥'+ this.$.cantidad.value +' a la cuenta Banco Corea',
             }
           }));
-        }else if((this.amount && this.amountTotal)>this.maxAmount){
+        }else if((this.amount && this.amountTotal) > this.maxAmount){
           this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
           this.dispatchEvent(new CustomEvent('elemento-error', {
             detail : {

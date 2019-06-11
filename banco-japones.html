@@ -17,7 +17,7 @@
       <button on-tap="_ingresarDinero">Ingresar Dinero</button>
       <button on-tap="_retirarDinero">Retirar Dinero</button>
       <p>Actualmente tienes</p>
-      <p>Monto: 円 [[amountTotal]] [[currency]]</p>
+      <p>Monto: 円[[amountTotal]] [[currency]]</p>
     </iron-collapse>
   </template>
 
@@ -80,10 +80,10 @@
           this.dispatchEvent(new CustomEvent('elemento-success', {
             detail : {
               isOnDOM: true,
-              message: 'Depósito Exitoso. Se ha ingresado con éxito 円'+ this.$.cantidad.value +' a la cuenta Banco Corea',
+              message: 'Depósito Exitoso. Se ha ingresado con éxito 円' + this.$.cantidad.value + ' a la cuenta Banco Corea',
             }
           }));
-        }else if((this.amount && this.amountTotal)>this.maxAmount){
+        }else if((this.amount && this.amountTotal) > this.maxAmount){
           this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
           this.dispatchEvent(new CustomEvent('elemento-error', {
             detail : {
