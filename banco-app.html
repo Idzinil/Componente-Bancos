@@ -4,24 +4,14 @@
 <link rel="import" href="./banco-chino.html">
 <link rel="import" href="./banco-corea.html">
 <link rel="import" href="./banco-japones.html">
+<link rel="import" href="./banco-estilos.html">
 
 
 <dom-module id="banco-app">
   <template>
-    <style>
+    <style include="estilo-compartido">
       :host {
         display: block;
-      }
-      paper-card.compon {
-      --paper-card-header-color: black;
-      --paper-card-font: black;
-      --paper-card-margin-bottom:8px; 
-      --paper-margin-right:8px; 
-      --paper-margin-left:8px
-      }
-      paper-card.compon {
-        width: 220px;
-        height: auto;
       }
 
       paper-card.componTrans {
@@ -36,10 +26,13 @@
     </style>
     <h2>¡Bienvenid@ al Banco!</h2>
 
-    <div class="horizontal">
+    <div class="general-style">
       <paper-card id="opacidad" image="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Mexico_%281934-1968%29.svg/700px-Flag_of_Mexico_%281934-1968%29.svg.png" alt="BMéxico" class="compon">
         <div class="card-content">
-          <banco-mexico id="bancoMexico" amountTotal={{amountBanco}} currency={{currencyBanco}} on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError"></banco-mexico>
+          <banco-mexico id="bancoMexico" amount_total="{{amountBanco}}" currency="{{currencyBanco}}" on-elemento-success="_eventoSuccess" on-elemento-error="_eventoError">
+           <!-- LIGHT DOM
+            <p>Este es el banco de la esperanza {{valorDesdeFuera}}</p>-->
+          </banco-mexico>
         </div>
       </paper-card>
       <br><br>
@@ -61,19 +54,20 @@
         </div>
       </paper-card>
       <br><br>
+    
+      <paper-card heading = "Transacciones" alt="Transacción" class="componTrans">
+        <div class = "card-content horizontal justified">
+          <h3>Exitosas</h3>
+          <template is="dom-repeat" items="[[transacciones]]">  
+            <p>[[item]]</p>
+          </template>
+          <h3>Erróneas</h3>
+          <template is="dom-repeat" items="[[errores]]">
+            <p>[[item]]</p>
+          </template>
+        </div>
+      </paper-card>
     </div>
-    <paper-card heading = "Transacciones" alt="Transacción" class="componTrans">
-      <div class = "card-content horizontal justified">
-        <H3>Exitosas</H3>
-        <template is="dom-repeat" items="[[transacciones]]">  
-          <p>[[item]]</p>
-        </template>
-        <h3>Erróneas</h3>
-        <template is="dom-repeat" items="[[errores]]">
-          <p>[[item]]</p>
-        </template>
-      </div>
-    </paper-card>
   </template>
 
   <script>
@@ -94,6 +88,10 @@
             value: () => {
               return []
             }
+          },
+          valorDesdeFuera: {
+            type: String,
+            value: 'Hola soy del padre'
           },
           errores: {
             type: Array,

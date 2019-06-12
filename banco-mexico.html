@@ -1,27 +1,27 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="./banco-estilos.html">
 
 <dom-module id="banco-mexico">
   <template>
-    <style>
+    <style include="estilo-compartido">
       :host {
         display: block;
       }
-      .btn {
-        font-size: 13.9px;
-      }
     </style>
-    <button class="btn" on-tap="_cuentaBanco">CUENTA BANCO MÉXICO</button>
+    <paper-button class="btn" on-tap="_cuentaBanco" toggles raised>CUENTA BANCO MÉXICO</paper-button>
     <iron-collapse id="collapse">
-      <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
-      <button on-tap="_ingresarDinero">Ingresar Dinero</button>
-      <button on-tap="_retirarDinero">Retirar Dinero</button>
-      <p>Actualmente tienes</p>
-      <p>Monto: $[[amountTotal]] [[currency]]</p>
+      <br>
+      <paper-input id="cantidad" class="cantidadIngresa" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
+      <br>
+      <paper-button class="btnIR" on-tap="_ingresarDinero" toggles raised>Ingresar Dinero</paper-button>
+      <paper-button class="btnIR" on-tap="_retirarDinero" toggles raised>Retirar Dinero</paper-button>
+      <p> Saldo Actual : $[[amountTotal]] [[currency]] </p>
+      <!--<slot></slot>-->
     </iron-collapse>
-    <slot></slot>
   </template>
 
   <script>
@@ -64,7 +64,7 @@
       }
 
       _cuentaBanco(){
-        if(this.ingresa){
+        if (this.ingresa) {
           this.ingresa = false;
           this.$.collapse.hide();
         } else {
@@ -74,19 +74,19 @@
       }
 
       _ingresarDinero(){
-        if (!/^([0-9])*$/.test(this.amount)){
+        if (!/^([0-9])*$/.test(this.amount)) {
           alert("Lo ingresado no es una cantidad válida");
-        }else{
-          this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount); 
-          if((this.amount && this.amountTotal) <= this.maxAmount){
+        } else {
+          let suma = parseFloat(this.amountTotal) + parseFloat(this.amount);
+          if (suma <= this.maxAmount) {
+            this.amountTotal = suma;
             this.dispatchEvent(new CustomEvent('elemento-success', {
               detail : {
                 isOnDOM: true,
                 message: 'Depósito Exitoso. Se ha ingresado con éxito $' + this.$.cantidad.value + ' a la cuenta Banco México',
               }
             }));
-          }else{
-            this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
+          } else {
             this.dispatchEvent(new CustomEvent('elemento-error', {
               detail : {
                 isOnDOM: true,
@@ -99,23 +99,22 @@
       }
 
       _retirarDinero(){
-        this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
-        if(this.amountTotal >= 0){
+        let resta = parseFloat(this.amountTotal) - parseFloat(this.amount);
+        if (resta >= 0) {
+          this.amountTotal = resta;
           this.dispatchEvent(new CustomEvent('elemento-success', {
             detail : {
               isOnDOM: true,
               message: 'Retiro Exitoso. Se ha retirado $' + this.$.cantidad.value + ' en la cuenta Banco México',
             }
           }));
-          this.amountTotal;
-        }else if(this.amountTotal < 0){
+        } else {
           this.dispatchEvent(new CustomEvent('elemento-error', {
             detail : {
               isOnDOM: true,
-              message: 'Error de Retiro. No cuentas con saldo suficiente, tu saldo es de $' + (parseInt(this.amountTotal) + parseInt(this.amount)) + ' en la cuenta Banco México',
+              message: 'Error de Retiro. No cuentas con saldo suficiente, tu saldo es de $' + (parseFloat(this.amountTotal) + parseFloat(this.amount)) + ' en la cuenta Banco México',
             }
           }));
-          this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
           alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de $' + this.amountTotal + ' ' + this.currency);
         }
       }

@@ -2,24 +2,23 @@
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="./banco-estilos.html">
 
 <dom-module id="banco-corea">
   <template>
-    <style>
+    <style include="estilo-compartido">
       :host {
         display: block;
       }
-      .btn {
-        font-size: 13.9px;
-      }
     </style>
-    <button class="btn" on-tap="_cuentaBanco">CUENTA BANCO COREA</button>
+    <paper-button class="btn" on-tap="_cuentaBanco" toggles raised>CUENTA BANCO COREA</paper-button>
     <iron-collapse id="collapse">
-      <paper-input id="cantidad" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
-      <button on-tap="_ingresarDinero">Ingresar Dinero</button>
-      <button on-tap="_retirarDinero">Retirar Dinero</button>
-      <p>Actualmente tienes</p>
-      <p>Monto: 원[[amountTotal]] [[currency]]</p>
+      <br>
+      <paper-input id="cantidad" class="cantidadIngresa" label="Cantidad a Ingresar o Retirar:" value="{{amount}}"></paper-input>
+      <br>
+      <paper-button class="btnIR" on-tap="_ingresarDinero">Ingresar Dinero</paper-button>
+      <paper-button class="btnIR" on-tap="_retirarDinero">Retirar Dinero</paper-button>
+      <p>Saldo Actual : 원[[amountTotal]] [[currency]]</p>
     </iron-collapse>
   </template>
 
@@ -73,29 +72,34 @@
       }
 
       _ingresarDinero(){
-        this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount); 
-        if((this.amount && this.amountTotal) <= this.maxAmount){
-          this.dispatchEvent(new CustomEvent('elemento-success', {
-            detail : {
-              isOnDOM: true,
-              message: 'Depósito Exitoso. Se ha ingresado con éxito ¥'+ this.$.cantidad.value +' a la cuenta Banco Corea',
-            }
-          }));
-        }else if((this.amount && this.amountTotal) > this.maxAmount){
-          this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
-          this.dispatchEvent(new CustomEvent('elemento-error', {
-            detail : {
-              isOnDOM: true,
-              message: 'Error de Depósito. Monto excedido de Banco Corea',
-            }
-          }));
-          alert('ERROR DE DEPÓSITO. Monto excedido del límite de cuenta en Banco Corea');
+        if (!/^([0-9])*$/.test(this.amount)) {
+          alert("Lo ingresado no es una cantidad válida");
+        } else {
+          let suma = parseFloat(this.amountTotal) + parseFloat(this.amount); 
+          if(suma <= this.maxAmount){
+            this.amountTotal = suma;
+            this.dispatchEvent(new CustomEvent('elemento-success', {
+              detail : {
+                isOnDOM: true,
+                message: 'Depósito Exitoso. Se ha ingresado con éxito ¥'+ this.$.cantidad.value +' a la cuenta Banco Corea',
+              }
+            }));
+          } else {
+            this.dispatchEvent(new CustomEvent('elemento-error', {
+              detail : {
+                isOnDOM: true,
+                message: 'Error de Depósito. Monto excedido de Banco Corea',
+              }
+            }));
+            alert('ERROR DE DEPÓSITO. Monto excedido del límite de cuenta en Banco Corea');
+          }
         }
       }
 
       _retirarDinero(){
-        this.amountTotal = parseInt(this.amountTotal) - parseInt(this.amount);
-        if(this.amountTotal >= 0){
+        let resta = parseFloat(this.amountTotal) - parseFloat(this.amount);
+        if(resta >= 0){
+          this.amountTotal = resta;
           this.dispatchEvent(new CustomEvent('elemento-success', {
             detail : {
               isOnDOM: true,
@@ -103,14 +107,13 @@
             }
           }));
           this.amountTotal;
-        }else if(this.amountTotal < 0){
+        } else {
           this.dispatchEvent(new CustomEvent('elemento-error', {
             detail : {
               isOnDOM: true,
-              message: 'ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 원'+ (parseInt(this.amountTotal) + parseInt(this.amount)) +' en la cuenta Banco Corea',
+              message: 'Error de Retiro. No cuentas con saldo suficiente, tu saldo es de 원'+ (parseFloat(this.amountTotal) + parseFloat(this.amount)) +' en la cuenta Banco Corea',
             }
           }));
-          this.amountTotal = parseInt(this.amountTotal) + parseInt(this.amount);
           alert('ERROR DE RETIRO. No cuentas con saldo suficiente, tu saldo es de 원' + this.amountTotal + ' ' + this.currency);
         }
       }
